@@ -1,6 +1,6 @@
 import supabaseClient from "./supabaseClient.js";
 
-const contractCreate = async (data) => {
+const contractUpsert = async (data) => {
   const { body, error } = await supabaseClient
     .from('contract')
     .upsert(data);
@@ -12,4 +12,4 @@ const contractCreate = async (data) => {
   return body;
 }
 
-export default contractCreate;
+export default contractUpsert;

@@ -1,6 +1,6 @@
 import supabaseClient from "./supabaseClient.js";
 
-const contractPost = async (project, name, id) => {
+const contractsGet = async ({ project, name, id }) => {
   let query = supabaseClient
     .from('contract')
     .select('*')
@@ -18,4 +18,4 @@ const contractPost = async (project, name, id) => {
   return data || [];
 }
 
-export default contractPost;
+export default contractsGet;

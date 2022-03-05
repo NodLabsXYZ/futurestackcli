@@ -18,8 +18,8 @@ const uploadContractInfo = async ({ project, contractName, abi, bytecode, descri
 
   const existingContracts = await contractsGet({ project, name: contractName });
   for (const existingContract of existingContracts) {
-    if (existingContract.info.abi === abi && existingContract.info.bytecode === bytecode) {
-      data.id = existingContract.id;
+    if (existingContract.info.bytecode === bytecode) {
+      data.id = existingContract.id
     }
   }
 
