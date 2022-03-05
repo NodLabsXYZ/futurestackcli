@@ -1,5 +1,6 @@
 import ora from 'ora';
-import contractPost from './queries/contractPost.js';
+import contractUpsert from './queries/contractUpsert.js';
+import contractsGet from './queries/contractsGet.js';
 
 const uploadContractInfo = async ({ project, contractName, abi, bytecode, description }) => {
   const uploadSpinner = ora(`Uploading information for contract "${contractName}"`).start();
@@ -15,7 +16,14 @@ const uploadContractInfo = async ({ project, contractName, abi, bytecode, descri
     compiled_at: new Date().toISOString()  
   }
 
-  await contractPost(data)
+  const existingContracts = await contractsGet({ project, name: contractName });
+  for (const existingContract of existingContracts) {
+    if (existingContract.info.abi === abi && existingContract.info.bytecode === bytecode) {
+      data.id = existingContract.id;
+    }
+  }
+
+  await contractUpsert(data)
   uploadSpinner.stop()
 }
 
