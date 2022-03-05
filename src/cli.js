@@ -4,6 +4,8 @@ import { Command } from 'commander';
 import uploadContractInfo from '../src/uploadContractInfo.js';
 import getProjects from "./getProjects.js";
 import getProject from "./getProject.js";
+import selectProject from "./selectProject.js";
+import getDescription from "./getDescription.js";
 import findDeployment from "./findDeployment.js";
 import writeFile from './writeFile.js';
 import openWebsite from './openWebsite.js';
@@ -34,37 +36,28 @@ const cli = () => {
       await compile(name);
       const artifact = await getContractArtifact(name);
 
-      const projects = await getProjects();
-
-      let project;
-      if (options.project) {
-        project = projects.find(
-          p => p.title === options.project
-        );
-      } else if (projects.length == 1) {
-        project = projects[0];
-      } else {
-        project = projects.find(
-          p => p.title === directoryName
-        )
-      }
+      const project = await selectProject(options.project)
 
       if (!project) {
         console.log("No matching project found. Please create a new project first.")
         return;
       }
 
+      const description = await getDescription();
+
       await uploadContractInfo({
         project: project,
-        ...artifact
+        ...artifact,
+        description
       });
+
       console.log("")
       console.log("")
       console.log("To view your dashboard visit:")
       console.log("")
       console.log(`${dashboardURL}/project/${project.id}`)
       console.log("")
-      console.log(`or run \`future dashboard ${name}\``)
+      console.log("or run \`future dashboard\`")
       console.log("")
       console.log("")
     });

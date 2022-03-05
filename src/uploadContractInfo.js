@@ -1,7 +1,7 @@
 import ora from 'ora';
 import contractPost from './queries/contractPost.js';
 
-const uploadContractInfo = async ({ project, contractName, abi, bytecode }) => {
+const uploadContractInfo = async ({ project, contractName, abi, bytecode, description }) => {
   const uploadSpinner = ora(`Uploading information for contract "${contractName}"`).start();
 
   const data = {
@@ -9,7 +9,8 @@ const uploadContractInfo = async ({ project, contractName, abi, bytecode }) => {
     name: contractName,
     info: {
       abi,
-      bytecode
+      bytecode,
+      description
     },
     compiled_at: new Date().toISOString()  
   }
