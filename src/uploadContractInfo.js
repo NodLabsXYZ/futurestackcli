@@ -1,41 +1,20 @@
 import ora from 'ora';
-import fetchData from './fetchData.js';
+import contractPost from './queries/contractPost.js';
 
-const uploadContractInfo = async ({ contractName, abi, bytecode }) => {
-  const spinner = ora('Looking up projects...').start();
-  const projects = await fetchData(
-    'projects',
-    'GET'
-  )
-  spinner.stop()
-
-  let activeProject = projects.find(
-    project => project.title === contractName
-  )
-
-  if (!activeProject) {
-    console.log("No matching project found. Please create a new project first.")
-    return;
-  }
+const uploadContractInfo = async ({ project, contractName, abi, bytecode }) => {
+  const uploadSpinner = ora(`Uploading information for contract "${contractName}"`).start();
 
   const data = {
-    contract: {
-      projectId: activeProject.id,
-      name: contractName,
-      info: {
-        abi,
-        bytecode
-      },
-      compiledAt: new Date().toISOString()  
-    }
+    project_id: project.id,
+    name: contractName,
+    info: {
+      abi,
+      bytecode
+    },
+    compiled_at: new Date().toISOString()  
   }
 
-  const uploadSpinner = ora(`Uploading information for contract "${contractName}"`).start();
-  await fetchData(
-    'contracts',
-    'POST',
-    data
-  )
+  await contractPost(data)
   uploadSpinner.stop()
 }
 

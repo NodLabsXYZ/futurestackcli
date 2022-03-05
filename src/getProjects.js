@@ -1,12 +1,9 @@
 import ora from 'ora';
-import fetchData from './fetchData.js';
+import projectsGet from './queries/projectsGet.js';
 
 const getProjects = async () => {
   const spinner = ora('Retrieving project information...').start();
-  const projects = await fetchData(
-    'projects',
-    'GET'
-  )
+  const projects = await projectsGet()
   spinner.stop()
 
   return projects

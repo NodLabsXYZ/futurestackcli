@@ -8,7 +8,7 @@ import findDeployment from "./findDeployment.js";
 import writeFile from './writeFile.js';
 import openWebsite from './openWebsite.js';
 
-const dashboardURL = 'https://contract-deployment-dashboard-test.vercel.app/'
+const dashboardURL = 'https://future-stack.vercel.app'
 
 const cli = () => {
   const directoryName = path.basename(process.cwd());
@@ -26,19 +26,43 @@ const cli = () => {
       '[name]', 
       'the name of the contract to compile - if not specified will default to the contract that matches the current working directory'
     )
-    // .option('--first', 'display just the first substring')
-    .action(async (name=directoryName, _options) => {
+    .option('-p, --project <project>', 'the name of the project on FutureStack')
+    .action(async (name=directoryName, options) => {
       const compile = (await import('../src/compile.js')).default;
       const getContractArtifact = (await import('../src/getContractArtifact.js')).default;
 
       await compile(name);
       const artifact = await getContractArtifact(name);
-      await uploadContractInfo(artifact);
+
+      const projects = await getProjects();
+
+      let project;
+      if (options.project) {
+        project = projects.find(
+          p => p.title === options.project
+        );
+      } else if (projects.length == 1) {
+        project = projects[0];
+      } else {
+        project = projects.find(
+          p => p.title === directoryName
+        )
+      }
+
+      if (!project) {
+        console.log("No matching project found. Please create a new project first.")
+        return;
+      }
+
+      await uploadContractInfo({
+        project: project,
+        ...artifact
+      });
       console.log("")
       console.log("")
       console.log("To view your dashboard visit:")
       console.log("")
-      console.log(`${dashboardURL}/project/${name}`)
+      console.log(`${dashboardURL}/project/${project.id}`)
       console.log("")
       console.log(`or run \`future dashboard ${name}\``)
       console.log("")
