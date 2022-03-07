@@ -1,6 +1,6 @@
 {
   "name": "futurestack-cli",
-  "version": "0.0.10",
+  "version": "0.0.12",
   "description": "Tools for building in web3",
   "type": "module",
   "bin": {

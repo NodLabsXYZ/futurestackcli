@@ -1,15 +1,19 @@
+import 'dotenv/config'
 import { createClient } from '@supabase/supabase-js';
-import getSecretKey from '../getSecretKey.js';
+import config from '../config.js';
 
-const secretKey = getSecretKey()
-const supabaseUrl = 'http://localhost:54321'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24ifQ.625_WdcF3KHqz5amU0x2X5WWHP-OEs_4qj0ssLNHzTs'
+const secretKey = process.env.FUTURE_STACK_SECRET_KEY
+const supabaseUrl = process.env.SUPABASE_URL || config.supabaseUrl;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || config.supabaseAnonKey;
+
 const supabaseClient = createClient(
   supabaseUrl,
-  supabaseAnonKey, {
-  headers: {
-    Authorisation: `Bearer ${secretKey}`
+  supabaseAnonKey, 
+  {
+    headers: {
+      Authorisation: `Bearer ${secretKey}`
+    }
   }
-});
+);
 
 export default supabaseClient;
