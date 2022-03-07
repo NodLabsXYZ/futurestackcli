@@ -10,7 +10,7 @@ import findDeployment from "./findDeployment.js";
 import writeFile from './writeFile.js';
 import openWebsite from './openWebsite.js';
 
-const dashboardURL = 'https://future-stack.vercel.app'
+import config from "./config.js";
 
 const cli = () => {
   const directoryName = path.basename(process.cwd());
@@ -55,7 +55,7 @@ const cli = () => {
       console.log("")
       console.log("To view your dashboard visit:")
       console.log("")
-      console.log(`${dashboardURL}/project/${project.id}`)
+      console.log(`${config.website}/project/${project.id}`)
       console.log("")
       console.log("or run \`future dashboard\`")
       console.log("")
