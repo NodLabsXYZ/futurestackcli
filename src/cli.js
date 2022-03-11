@@ -29,6 +29,7 @@ const cli = () => {
       'the name of the contract to compile - if not specified will default to the contract that matches the current working directory'
     )
     .option('-p, --project <project>', 'the name of the project on FutureStack')
+    .option('-o, --open', 'make this contract open source and available for others to deploy')
     .action(async (name=directoryName, options) => {
       const compile = (await import('../src/compile.js')).default;
       const getContractArtifact = (await import('../src/getContractArtifact.js')).default;
@@ -45,11 +46,17 @@ const cli = () => {
 
       const description = await getDescription();
 
-      await uploadContractInfo({
+      const contractData = {
         project: project,
         ...artifact,
         description
-      });
+      }
+
+      if (options.open) {
+        contractData.opensource = true;
+      }
+
+      await uploadContractInfo(contractData);
 
       console.log("")
       console.log("")

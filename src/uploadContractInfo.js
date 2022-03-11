@@ -2,7 +2,7 @@ import ora from 'ora';
 import contractUpsert from './queries/contractUpsert.js';
 import contractsGet from './queries/contractsGet.js';
 
-const uploadContractInfo = async ({ project, contractName, abi, bytecode, description }) => {
+const uploadContractInfo = async ({ project, contractName, opensource, abi, bytecode, description }) => {
   const uploadSpinner = ora(`Uploading information for contract "${contractName}"`).start();
 
   const data = {
@@ -14,6 +14,10 @@ const uploadContractInfo = async ({ project, contractName, abi, bytecode, descri
       description
     },
     compiled_at: new Date().toISOString()  
+  }
+
+  if (opensource) {
+    data.opensource = opensource;
   }
 
   const existingContracts = await contractsGet({ project, name: contractName });
